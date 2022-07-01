@@ -1,2 +1,2 @@
-# Compas
-Compas改修課題
+# Compass
+Compass改修課題
