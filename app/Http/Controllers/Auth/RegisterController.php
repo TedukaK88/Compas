@@ -66,7 +66,40 @@ class RegisterController extends Controller
             $old_day = $request->old_day;
             $data = $old_year . '-' . $old_month . '-' . $old_day;
             $birth_day = date('Y-m-d', strtotime($data));
-            $subjects = $request->subject;
+               //subjectについて、roleが生徒の時のみしか選べない為、講師の場合はその値をsubjectとして利用する
+               if(isset($request->subject)){
+                $subjects = $request->subject;
+            }else{
+                $subjects = $request->role;
+            }
+
+            //--------------------------------------------------------------------------------------------------------------------
+                //Add Validation
+                $rules = [
+                    'over_name' => 'required|string|max:10',
+                    'under_name' => 'required|string|max:10',
+                    'over_name_kana' => 'required|string|max:30|regex:/\A[ァ-ヴー]+\z/u',
+                    'under_name_kana' => 'required|string|max:30|regex:/\A[ァ-ヴー]+\z/u',
+                    'mail_address' => 'required|string|email|min:5|max:255|unique:users,mail_address',
+                    'sex' => 'required|regex:/[1-3]/',
+                    'birth_day' => 'required|date|after:"2000-01-01"|before:"now"',
+                    'role' => 'required|regex:/[1-4]/',
+                    'password' =>'string|regex:/\A([a-zA-Z0-9]{8,30})+\z/u|confirmed',
+                ];
+
+                $register_request = $request->all();
+                $register_request += array('birth_day'=>$birth_day);
+
+                $validator = validator::make($register_request,$rules);
+                //フォーム入力に問題がある場合
+                if($validator->fails()){
+                    // DD($request,$subjects,$register_request);
+                    return redirect('/register')
+                    ->withErrors($validator)
+                    ->withInput();
+                }
+
+            //--------------------------------------------------------------------------------------------------------------------
 
             $user_get = User::create([
                 'over_name' => $request->over_name,
@@ -79,8 +112,10 @@ class RegisterController extends Controller
                 'role' => $request->role,
                 'password' => bcrypt($request->password)
             ]);
+            // DD($request,$subjects,$register_request);
             $user = User::findOrFail($user_get->id);
-            $user->subjects()->attach($subjects);
+            // DD($request,$subjects,$register_request,$user_get->id,$user);
+            // $user->subjects()->attach($subjectsId);
             DB::commit();
             return view('auth.login.login');
         }catch(\Exception $e){
