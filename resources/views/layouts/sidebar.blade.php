@@ -14,7 +14,11 @@
   <link href="https://use.fontawesome.com/releases/v5.6.1/css/all.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 </head>
-
+<!-- ログインユーザー情報の取得 -->
+<?php
+$user = auth()->user();
+?>
+<!-- ------------------------ -->
 <body class="all_content">
   <div class="d-flex">
     <div class="sidebar">
@@ -22,8 +26,13 @@
       <p><a href="{{ route('top.show') }}">トップ</a></p>
       <p><a href="/logout">ログアウト</a></p>
       <p><a href="{{ route('calendar.general.show',['user_id' => Auth::id()]) }}">スクール予約</a></p>
-      <p><a href="{{ route('calendar.admin.show',['user_id' => Auth::id()]) }}">スクール予約確認</a></p>
-      <p><a href="{{ route('calendar.admin.setting',['user_id' => Auth::id()]) }}">スクール枠登録</a></p>
+      <!-- ------------------------------------------------------------------------------------------------------- -->
+      <!-- roleによる表示項目の制限 -->
+      @if($user->role <> 4)
+        <p><a href="{{ route('calendar.admin.show',['user_id' => Auth::id()]) }}">スクール予約確認</a></p>
+        <p><a href="{{ route('calendar.admin.setting',['user_id' => Auth::id()]) }}">スクール枠登録</a></p>
+      @endif
+      <!-- ------------------------------------------------------------------------------------------------------- -->
       <p><a href="{{ route('post.show') }}">掲示板</a></p>
       <p><a href="{{ route('user.show') }}">ユーザー検索</a></p>
       @show
