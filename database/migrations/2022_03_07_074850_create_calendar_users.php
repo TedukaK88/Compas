@@ -17,7 +17,7 @@ class CreateCalendarUsers extends Migration
             $table->integer('id')->autoIncrement()->comment('id');
             $table->integer('user_id')->index()->comment('ユーザーid');
             $table->integer('calendar_id')->index()->comment('カレンダーid');
-            $table->timestamp('created_at')->nullable()->comment('登録日時');
+            $table->timestamp('created_at')->default(DB::raw('current_timestamp on update current_timestamp'))->comment('登録日時');
             $table->softDeletes();
         });
     }

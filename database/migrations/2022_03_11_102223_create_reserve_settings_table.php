@@ -18,7 +18,7 @@ class CreateReserveSettingsTable extends Migration
             $table->date('setting_reserve')->comment('開講日');
             $table->integer('setting_part')->comment('部');
             $table->integer('limit_users')->default(20)->comment('人数');
-            $table->timestamp('created_at')->nullable()->comment('登録日時');
+            $table->timestamp('created_at')->default(DB::raw('current_timestamp on update current_timestamp'))->comment('登録日時');
         });
     }
 

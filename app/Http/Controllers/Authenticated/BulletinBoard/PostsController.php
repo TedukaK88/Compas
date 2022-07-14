@@ -12,6 +12,8 @@ use App\Models\Posts\Like;
 use App\Models\Users\User;
 use App\Http\Requests\BulletinBoard\PostFormRequest;
 use Auth;
+//add Validator
+use Validator;
 
 class PostsController extends Controller
 {
@@ -70,9 +72,44 @@ class PostsController extends Controller
         return redirect()->route('post.show');
     }
     public function mainCategoryCreate(Request $request){
-        MainCategory::create(['main_category' => $request->main_category_name]);
-        return redirect()->route('post.input');
+        //add validation
+        $rules = [
+            'main_category_name' => 'required|max:100|string|unique:main_categories,main_category'
+        ];
+        $validator = Validator::make($request->all(),$rules);
+        if($validator->fails()){
+            return redirect()->route('post.input')
+            ->withErrors($validator)
+            ->withInput();
+        }else{
+            MainCategory::create(['main_category' => $request->main_category_name]);
+            return redirect()->route('post.input');
+        }
     }
+    //-----   add subCategoryCreate   ---------------------------------------------------------------
+    public function subCategoryCreate(Request $request){
+        //validation
+        $rules = [
+            'main_category_id' => 'required|exists:main_categories,id',
+            'sub_category_name' => 'required|string|max:100|unique:sub_categories,sub_category'
+        ];
+        $validator = Validator::make($request->all(),$rules);
+        // DD($request);
+        if($validator->fails()){
+            // DD($request);
+            return redirect()->route('post.input')
+            ->withErrors($validator)
+            ->withInput();
+        }else{
+            // DD($request);
+            SubCategory::create([
+                'main_category_id' => $request->main_category_id,
+                'sub_category' => $request->sub_category_name
+            ]);
+            return redirect()->route('post.input');
+        }
+    }
+    //-----------------------------------------------------------------------------------------------
 
     public function commentCreate(Request $request){
         PostComment::create([
