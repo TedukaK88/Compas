@@ -16,6 +16,7 @@ class Subjects extends Model
     ];
 
     public function users(){
-        return;// リレーションの定義
+        // リレーションの定義
+        return $this->belongsToMany('App\Models\User');
     }
 }
