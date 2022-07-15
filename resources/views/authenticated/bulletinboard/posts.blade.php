@@ -10,14 +10,24 @@
       <p><a href="{{ route('post.detail', ['id' => $post->id]) }}">{{ $post->post_title }}</a></p>
       <div class="post_bottom_area d-flex">
         <div class="d-flex post_status">
+            <?php
+              $comment = \DB::table('post_comments')
+              ->join('posts','posts.id','=','post_id')
+              ->where('posts.id',$post->id)
+              ->pluck('post_comments.user_id');
+              $like = \DB::table('likes')
+              ->join('posts','posts.id','=','like_post_id')
+              ->where('posts.id',$post->id)
+              ->pluck('like_user_id');
+            ?>
           <div class="mr-5">
-            <i class="fa fa-comment"></i><span class=""></span>
+            <i class="fa fa-comment"></i><span class="">{{ count($comment) }}</span>
           </div>
           <div>
             @if(Auth::user()->is_Like($post->id))
-            <p class="m-0"><i class="fas fa-heart un_like_btn" post_id="{{ $post->id }}"></i><span class="like_counts{{ $post->id }}"></span></p>
+            <p class="m-0"><i class="fas fa-heart un_like_btn" post_id="{{ $post->id }}"></i><span class="like_counts{{ $post->id }}">{{ count($like) }}</span></p>
             @else
-            <p class="m-0"><i class="fas fa-heart like_btn" post_id="{{ $post->id }}"></i><span class="like_counts{{ $post->id }}"></span></p>
+            <p class="m-0"><i class="fas fa-heart like_btn" post_id="{{ $post->id }}"></i><span class="like_counts{{ $post->id }}">{{ count($like) }}</span></p>
             @endif
           </div>
         </div>
@@ -37,6 +47,12 @@
       <ul>
         @foreach($categories as $category)
         <li class="main_categories" category_id="{{ $category->id }}"><span>{{ $category->main_category }}<span></li>
+        <?php
+          $sub_categories = \DB::table('sub_categories')->where('main_category_id',$category->id)->get();
+        ?>
+          @foreach($sub_categories as $sub_category)
+            <li class="sub_categories"><span>{{ $sub_category->sub_category }}<span></li>
+          @endforeach
         @endforeach
       </ul>
     </div>
