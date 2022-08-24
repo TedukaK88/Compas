@@ -66,12 +66,7 @@ class RegisterController extends Controller
             $old_day = $request->old_day;
             $data = $old_year . '-' . $old_month . '-' . $old_day;
             $birth_day = date('Y-m-d', strtotime($data));
-               //subjectについて、roleが生徒の時のみしか選べない為、講師の場合はその値をsubjectとして利用する
-               if(isset($request->subject)){
-                $subjects = intval($request->subject);
-            }else{
-                $subjects = intval($request->role);
-            }
+            $subjects = $request->subject;
 
             //--------------------------------------------------------------------------------------------------------------------
                 //Add Validation
@@ -116,7 +111,7 @@ class RegisterController extends Controller
             $user = User::findOrFail($user_get->id);
             // DD($request,$subjects,$register_request,$user_get->id,$user);
             //　下記リレーション未改修
-            // $user->subjects()->attach($subjects);
+            $user->subjects()->attach($subjects);
             DB::commit();
             return view('auth.login.login');
         }catch(\Exception $e){
