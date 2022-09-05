@@ -19,7 +19,8 @@ class CalendarsController extends Controller
         return view('authenticated.calendar.admin.calendar', compact('calendar'));
     }
 
-    public function reserveDetail($user_id = 0, $date, $part){
+    public function reserveDetail($user_id = 0){
+        //function の引数より, $date, $partを一時的に削除
         $reservePersons = ReserveSettings::with('users')->where('setting_reserve', $date)->where('setting_part', $part)->get();
         return view('authenticated.calendar.admin.reserve_detail', compact('reservePersons', 'date', 'part'));
     }

@@ -40,9 +40,12 @@ class CalendarView{
         $startDay = $this->carbon->copy()->format("Y-m-01");
         $toDay = $this->carbon->copy()->format("Y-m-d");
 
+        //カレンダーの枠組みのコード
         if($startDay <= $day->everyDay() && $toDay >= $day->everyDay()){
-          $html[] = '<td class="calendar-td">';
+          //過去日の場合↓
+          $html[] = '<td class="past-day border">';
         }else{
+          //未来日の場合↓
           $html[] = '<td class="calendar-td '.$day->getClassName().'">';
         }
         $html[] = $day->render();
@@ -64,7 +67,15 @@ class CalendarView{
             $html[] = '<input type="hidden" name="getPart[]" value="" form="reserveParts">';
           }
         }else{
-          $html[] = $day->selectPart($day->everyDay());
+          //予約部数選択欄表示コードに過去日であるかのif文を追記↓
+          if($startDay <= $day->everyDay() && $toDay >= $day->everyDay()){
+            //過去日である場合のコード
+            //=====　後日、受講済みの情報を表記するコードの追記が必要　=====
+            $html[] = '<p>受付終了</p>';
+          }else{
+            //現在以降である場合のコード↓
+            $html[] = $day->selectPart($day->everyDay());
+          }
         }
         $html[] = $day->getDate();
         $html[] = '</td>';
