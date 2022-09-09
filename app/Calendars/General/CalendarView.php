@@ -40,7 +40,7 @@ class CalendarView{
         $startDay = $this->carbon->copy()->format("Y-m-01");
         $toDay = $this->carbon->copy()->format("Y-m-d");
 
-        //カレンダーの枠組みのコード
+        //カレンダー内の枠組みのコード
         if($startDay <= $day->everyDay() && $toDay >= $day->everyDay()){
           //過去日の場合↓
           $html[] = '<td class="past-day border">';
@@ -54,26 +54,35 @@ class CalendarView{
           $reservePart = $day->authReserveDate($day->everyDay())->first()->setting_part;
           if($reservePart == 1){
             $reservePart = "リモ1部";
+            $reserveResult = "1部参加";   //参加済み表記作成
           }else if($reservePart == 2){
             $reservePart = "リモ2部";
+            $reserveResult = "2部参加";   //参加済み表記作成
           }else if($reservePart == 3){
             $reservePart = "リモ3部";
+            $reserveResult = "3部参加";   //参加済み表記作成
           }
           if($startDay <= $day->everyDay() && $toDay >= $day->everyDay()){
-            $html[] = '<p class="m-auto p-0 w-75" style="font-size:12px"></p>';
-            $html[] = '<input type="hidden" name="getPart[]" value="" form="reserveParts">';
+            // 過去日 且つ 予約済み の時のコード  (出席情報の表示)
+            $html[] = '<p class="m-auto p-0 w-75" style="font-size:12px">'.$reserveResult.'</p>';   //出席情報の表示
+            $html[] = '<input type="hidden" name="getPart[]" value="" form="reserveParts">';    //予約用配列のnull
           }else{
-            $html[] = '<button type="submit" class="btn btn-danger p-0 w-75" name="delete_date" style="font-size:12px" value="'. $day->authReserveDate($day->everyDay())->first()->setting_reserve .'">'. $reservePart .'</button>';
+            //　未来日 且つ 予約済み の時のコード   (出席情報の表示、削除機能)
+            $html[] = '<form action="/delete/calendar" method="post" id="deleteParts">'.csrf_field();
+            $html[] = '<button type="submit" class="btn btn-danger p-0 w-75" name="delete_date" style="font-size:12px" value="'. $day->authReserveDate($day->everyDay())->first()->setting_reserve .'"  form="deleteParts">'. $reservePart .'</button>';
+            $html[] = '<input type="hidden" name="getPart[]" value="'.$day->authReserveDate($day->everyDay())->first()->setting_part.'" form="deleteParts">';
+            $html[] = '<input type="hidden" name="getDate[]" value="'.$day->authReserveDate($day->everyDay())->first()->setting_reserve.'" form="deleteParts">';
+            $html[] = '</form>';
             $html[] = '<input type="hidden" name="getPart[]" value="" form="reserveParts">';
           }
         }else{
-          //予約部数選択欄表示コードに過去日であるかのif文を追記↓
+          // 予約部数選択欄表示コードに過去日であるかのif文を追記↓
           if($startDay <= $day->everyDay() && $toDay >= $day->everyDay()){
-            //過去日である場合のコード
-            //=====　後日、受講済みの情報を表記するコードの追記が必要　=====
+            // 未予約 且つ 過去日 である場合のコード   (受付終了の文言)
             $html[] = '<p>受付終了</p>';
+            $html[] = '<input type="hidden" name="getPart[]" value="" form="reserveParts">';  //予約する際にnullの値が必要
           }else{
-            //現在以降である場合のコード↓
+            // 未予約 且つ 未来日 である場合のコード   (予約機能)
             $html[] = $day->selectPart($day->everyDay());
           }
         }
