@@ -88,6 +88,7 @@ li{
     top: 50%;
     transform: translate(-50%,-50%);
     width: 60%;
+    max-width: 800px; /*add*/
 }
 
 /* 掲示板 */

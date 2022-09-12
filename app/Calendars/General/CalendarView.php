@@ -68,11 +68,7 @@ class CalendarView{
             $html[] = '<input type="hidden" name="getPart[]" value="" form="reserveParts">';    //予約用配列のnull
           }else{
             //　未来日 且つ 予約済み の時のコード   (出席情報の表示、削除機能)
-            $html[] = '<form action="/delete/calendar" method="post" id="deleteParts">'.csrf_field();
-            $html[] = '<button type="submit" class="btn btn-danger p-0 w-75" name="delete_date" style="font-size:12px" value="'. $day->authReserveDate($day->everyDay())->first()->setting_reserve .'"  form="deleteParts">'. $reservePart .'</button>';
-            $html[] = '<input type="hidden" name="getPart[]" value="'.$day->authReserveDate($day->everyDay())->first()->setting_part.'" form="deleteParts">';
-            $html[] = '<input type="hidden" name="getDate[]" value="'.$day->authReserveDate($day->everyDay())->first()->setting_reserve.'" form="deleteParts">';
-            $html[] = '</form>';
+            $html[] = '<button class="btn btn-danger p-0 w-75 modalOpen" name="" style="font-size:12px" data-date="'. $day->authReserveDate($day->everyDay())->first()->setting_reserve .'" data-part="'.$day->authReserveDate($day->everyDay())->first()->setting_part.'" >'.$reservePart.'</button>';
             $html[] = '<input type="hidden" name="getPart[]" value="" form="reserveParts">';
           }
         }else{
@@ -99,7 +95,24 @@ class CalendarView{
 
     return implode('', $html);
   }
+//予約キャンセルのmodal用=================================================================================================================
+  function cancel(){
+    $html[] = '<p id="showDate">予約日：xxxx-xx-xx</p>';
+    $html[] = '<p id="showPart">時間：リモn部</p>';
+    $html[] = '<p>上記の予約をキャンセルしてもよろしいですか？</p>';
+    $html[] = '<br>';
+    $html[] = '<form action="/delete/calendar" method="post" id="deleteParts">'.csrf_field();
+    $html[] = '<div class="d-grid gap-2 d-md-flex justify-content-between w-75 m-auto">';
+    $html[] = '<button type="submit" class="btn btn-primary modalClose" style="font-size:12px">閉じる</button>';
+    $html[] = '<button type="submit" class="btn btn-danger" style="font-size:12px" form="deleteParts">キャンセル</button>';
+    $html[] = '<input type="hidden" id="cancelPart" name="getPart" value="value part" form="deleteParts">';
+    $html[] = '<input type="hidden" id="cancelDate" name="getDate" value="value date" form="deleteParts">';
+    $html[] = '</div>';
+    $html[] = '</form>';
 
+    return implode('', $html);
+  }
+//=======================================================================================================================================
   protected function getWeeks(){
     $weeks = [];
     $firstDay = $this->carbon->copy()->firstOfMonth();

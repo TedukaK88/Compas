@@ -38,14 +38,10 @@ class CalendarsController extends Controller
     }
 
     //予約削除機能追加
-    //課題：bladeにて予約用のformと削除用のformの使い分けができていない。
     public function delete(Request $request){
         // DD($request);
-        $getPart = $request->getPart;   //予約済みの部の配列
-        $getDate = $request->getDate;   //予約済みの日付の配列
-        $reserveDays = array_filter(array_combine($getDate, $getPart));     //予約済みの部の配列と日付の配列を結合
-        $delete_date = $request->delete_date;   //削除する予約の日付を変数にする
-        $delete_part = $reserveDays[$request->delete_date];     //削除する予約の部を変数にする
+        $delete_date = $request->getDate;   //削除する予約の日付を変数にする
+        $delete_part = $request->getPart;     //削除する予約の部を変数にする
         $delete_reserve_setting_id =        //削除する予約のレコードidを取得する
             \DB::table('reserve_settings')->select('id')
                 ->where('setting_reserve',$delete_date)
