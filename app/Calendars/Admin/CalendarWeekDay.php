@@ -3,6 +3,7 @@ namespace App\Calendars\Admin;
 
 use Carbon\Carbon;
 use App\Models\Calendars\ReserveSettings;
+use Auth;
 
 class CalendarWeekDay{
   protected $carbon;
@@ -30,15 +31,40 @@ class CalendarWeekDay{
     $three_part = ReserveSettings::with('users')->where('setting_reserve', $ymd)->where('setting_part', '3')->first();
 
     $html[] = '<div class="text-left">';
-    if($one_part){
-      $html[] = '<p class="day_part m-0 pt-1">1部</p>';
+    if($one_part){//===============================================================================================================
+      //  $html[] = '<p class="day_part m-0 pt-1">n部</p>';  より項目や機能追加
+      //  countする為に上記の$one_partからreserve_setting_idを数値として抜き出し、reserve_setting_usersから該当の予約数をcount-----------
+      $one_part_id = intval($one_part["id"]);
+      $one_part_count = \DB::table('reserve_setting_users')->where('reserve_setting_id',$one_part_id)->count();
+      $user = auth()->user(); // 予約詳細画面へのリンク用
+      //  --------------------------------------------------------------------------------------------------------------------------
+      //　予約確認画面表のマスの中身のview用コード　---------------------------------
+      $html[] = '<div class="d-flex">';
+      $html[] = '<a href="/calendar/'.$user->id.'/'.$ymd.'/1" class="day_part m-0 pt-1 text-primary">1部</a>';
+      $html[] = '<p class="ml-4 day_part m-0 pt-1">'.$one_part_count.'</p>';
+      $html[] = '</div>';
+      //  ------------------------------------------------------------------------
     }
-    if($two_part){
-      $html[] = '<p class="day_part m-0 pt-1">2部</p>';
+    if($two_part){//===============================================================================================================
+      $two_part_id = intval($two_part["id"]);
+      $two_part_count = \DB::table('reserve_setting_users')->where('reserve_setting_id',$two_part_id)->count();
+      //  --------------------------------------------------------------------------------------------------------------------------
+      $html[] = '<div class="d-flex">';
+      $html[] = '<a href="/calendar/'.$user->id.'/'.$ymd.'/2" class="day_part m-0 pt-1 text-primary">2部</a>';
+      $html[] = '<p class="ml-4 day_part m-0 pt-1">'.$two_part_count.'</p>';
+      $html[] = '</div>';
+      //  ------------------------------------------------------------------------
     }
-    if($three_part){
-      $html[] = '<p class="day_part m-0 pt-1">3部</p>';
-    }
+    if($three_part){//===============================================================================================================
+      $three_part_id = intval($three_part["id"]);
+      $three_part_count = \DB::table('reserve_setting_users')->where('reserve_setting_id',$three_part_id)->count();
+      //  --------------------------------------------------------------------------------------------------------------------------
+      $html[] = '<div class="d-flex">';
+      $html[] = '<a href="/calendar/'.$user->id.'/'.$ymd.'/3" class="day_part m-0 pt-1 text-primary">3部</a>';
+      $html[] = '<p class="ml-4 day_part m-0 pt-1">'.$three_part_count.'</p>';
+      $html[] = '</div>';
+      //  ------------------------------------------------------------------------
+    }//===============================================================================================================
     $html[] = '</div>';
 
     return implode("", $html);
