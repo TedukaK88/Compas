@@ -48,10 +48,13 @@ class CalendarsController extends Controller
                 ->where('setting_part',$delete_part)
                 ->value('id');
         $delete_user_id = Auth::id();
+        $reserve_settings = ReserveSettings::where('setting_reserve', $delete_date)->where('setting_part', $delete_part)->first();
         // DD($request,$delete_date,$delete_part,$delete_reserve_setting_id,$delete_user_id);
 
         //予約レコードの削除
         \DB::table('reserve_setting_users')->where('user_id',$delete_user_id)->where('reserve_setting_id',$delete_reserve_setting_id)->delete();
+        //該当日、部数の予約枠を１つ空ける
+        $reserve_settings->increment('limit_users');
 
         return redirect()->route('calendar.general.show', ['user_id' => Auth::id()]);
     }

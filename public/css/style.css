@@ -92,9 +92,9 @@ li{
 }
 
 /* 掲示板 */
-.sub_categories{
+/* .sub_categories{
   display:none;
-}
+} */
 .post_create_area{
   background:#FFF;
   border-radius:10px;

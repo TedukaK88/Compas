@@ -12,8 +12,6 @@ class UsersTableSeeder extends Seeder
      */
     public function run()
     {
-        DB::table('subjects')->truncate();  //DB初期化
-
         DB::table('users')->insert(
             [
             'over_name' => '生徒',
@@ -25,7 +23,12 @@ class UsersTableSeeder extends Seeder
             'birth_day' => '1995-08-08',
             'role' => 4,
             'password' => bcrypt('password')
-            ]);
+        ]);
+        DB::table('subject_users')->insert(
+            [
+                'user_id' => 1,
+                'subject_id' => 1
+        ]);
         DB::table('users')->insert(
         [
             'over_name' => '講師',
@@ -49,7 +52,17 @@ class UsersTableSeeder extends Seeder
                 'birth_day' => '2002-02-02',
                 'role' => 4,
                 'password' => bcrypt('password')
-            ]);
+        ]);
+        DB::table('subject_users')->insert(
+            [
+                'user_id' => 3,
+                'subject_id' => 2
+        ]);
+        DB::table('subject_users')->insert(
+            [
+                'user_id' => 3,
+                'subject_id' => 3
+        ]);
         DB::table('users')->insert(
             [
                 'over_name' => '押江',
@@ -61,6 +74,11 @@ class UsersTableSeeder extends Seeder
                 'birth_day' => '2004-03-13',
                 'role' => 4,
                 'password' => bcrypt('password')
-            ]);
+        ]);
+        DB::table('subject_users')->insert(
+            [
+                'user_id' => 4,
+                'subject_id' => 3
+        ]);
     }
 }

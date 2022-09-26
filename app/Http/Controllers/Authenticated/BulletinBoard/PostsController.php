@@ -26,9 +26,13 @@ class PostsController extends Controller
             $posts = Post::with('user', 'postComments')
             ->where('post_title', 'like', '%'.$request->keyword.'%')
             ->orWhere('post', 'like', '%'.$request->keyword.'%')->get();
-        }else if($request->category_word){
+        }else if($request->category_word){      //サブカテゴリー検索の改修
             $sub_category = $request->category_word;
             $posts = Post::with('user', 'postComments')->get();
+            // $posts = Post::with('user', 'postComments')->subCategories()
+            // ->where('sub_category',$sub_category)
+            // ->get();
+            // DD($request->category_word,$posts);
         }else if($request->like_posts){
             $likes = Auth::user()->likePostId()->get('like_post_id');
             $posts = Post::with('user', 'postComments')
@@ -94,14 +98,11 @@ class PostsController extends Controller
             'sub_category_name' => 'required|string|max:100|unique:sub_categories,sub_category'
         ];
         $validator = Validator::make($request->all(),$rules);
-        // DD($request);
         if($validator->fails()){
-            // DD($request);
             return redirect()->route('post.input')
             ->withErrors($validator)
             ->withInput();
         }else{
-            // DD($request);
             SubCategory::create([
                 'main_category_id' => $request->main_category_id,
                 'sub_category' => $request->sub_category_name

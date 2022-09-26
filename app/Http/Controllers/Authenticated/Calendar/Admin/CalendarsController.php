@@ -30,7 +30,6 @@ class CalendarsController extends Controller
     }
 
     public function updateSettings(Request $request){
-        DD($request);
         $reserveDays = $request->input('reserve_day');
         foreach($reserveDays as $day => $parts){
             foreach($parts as $part => $frame){
