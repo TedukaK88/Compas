@@ -64,7 +64,7 @@ class CalendarView{
           }
           if($startDay <= $day->everyDay() && $toDay >= $day->everyDay()){
             // 過去日 且つ 予約済み の時のコード  (出席情報の表示)
-            $html[] = '<p class="m-auto p-0 w-75" style="font-size:12px">'.$reserveResult.'</p>';   //出席情報の表示
+            $html[] = '<p class="m-auto p-0 w-75" style="font-size:16px">'.$reserveResult.'</p>';   //出席情報の表示
             $html[] = '<input type="hidden" name="getPart[]" value="" form="reserveParts">';    //予約用配列のnull
           }else{
             //　未来日 且つ 予約済み の時のコード   (出席情報の表示、削除機能)

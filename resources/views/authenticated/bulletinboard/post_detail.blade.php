@@ -8,8 +8,8 @@
           <div>
           </div>
           <div>
-            <span class="edit-modal-open" post_title="{{ $post->post_title }}" post_body="{{ $post->post }}" post_id="{{ $post->id }}">編集</span>
-            <a href="{{ route('post.delete', ['id' => $post->id]) }}" onclick="return confirm('削除してよろしいですか？')">削除</a>
+            <span class="edit-modal-open btn btn-primary" post_title="{{ $post->post_title }}" post_body="{{ $post->post }}" post_id="{{ $post->id }}">編集</span>
+            <a href="{{ route('post.delete', ['id' => $post->id]) }}" class="btn btn-danger" onclick="return confirm('削除してよろしいですか？')">削除</a>
           </div>
         </div>
 
@@ -57,13 +57,13 @@
   <div class="modal__content">
     <form action="{{ route('post.edit') }}" method="post">
       <div class="w-100">
-        <div class="modal-inner-title w-50 m-auto">
+        <div class="modal-inner-title w-auto h-4 mr-3 ml-3">
           <input type="text" name="post_title" placeholder="タイトル" class="w-100">
         </div>
-        <div class="modal-inner-body w-50 m-auto pt-3 pb-3">
+        <div class="modal-inner-body w-auto mt-3 mr-3 ml-3">
           <textarea placeholder="投稿内容" name="post_body" class="w-100"></textarea>
         </div>
-        <div class="w-50 m-auto edit-modal-btn d-flex">
+        <div class="w-auto mt-4 mr-5 ml-5 edit-modal-btn d-flex">
           <a class="js-modal-close btn btn-danger d-inline-block" href="">閉じる</a>
           <input type="hidden" class="edit-modal-hidden" name="post_id" value="">
           <input type="submit" class="btn btn-primary d-block" value="編集" onclick="return confirm('更新してよろしいですか？')">

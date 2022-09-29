@@ -1,11 +1,11 @@
 @extends('layouts.sidebar')
 
 @section('content')
-<p>ユーザー検索</p>
-<div class="search_content w-100 border d-flex">
+<!-- <p>ユーザー検索</p> -->
+<div class="search_content w-100 d-flex">
   <div class="reserve_users_area">
     @foreach($users as $user)
-    <div class="border one_person">
+    <div class="border one_person pl-2">
       <div>
         <span>ID : </span><span>{{ $user->id }}</span>
       </div>
@@ -55,16 +55,16 @@
   <div class="search_area w-25 border">
     <div class="">
       <div>
-        <input type="text" class="free_word" name="keyword" placeholder="キーワードを検索" form="userSearchRequest">
+        <input type="text" class="free_word mb-3" name="keyword" placeholder="キーワードを検索" form="userSearchRequest">
       </div>
-      <div>
+      <div class="mb-2 ml-3">
         <lavel>カテゴリ</lavel>
         <select form="userSearchRequest" name="category">
           <option value="name">名前</option>
           <option value="id">社員ID</option>
         </select>
       </div>
-      <div>
+      <div class="mb-2 ml-3">
         <label>並び替え</label>
         <select name="updown" form="userSearchRequest">
           <option value="ASC">昇順</option>
@@ -72,7 +72,7 @@
         </select>
       </div>
       <div class="">
-        <p class="m-0 search_conditions"><span>検索条件の追加</span></p>
+        <p class="mb-3  search_conditions"><span >検索条件の追加</span></p>
         <div class="search_conditions_inner">
           <div>
             <label>性別</label>
@@ -101,10 +101,10 @@
         </div>
       </div>
       <div>
-        <input type="reset" value="リセット" form="userSearchRequest">
+        <input type="reset" class="mb-2 ml-4 bg-white btn btn-outline-dark" value="リセット" form="userSearchRequest">
       </div>
       <div>
-        <input type="submit" name="search_btn" value="検索" form="userSearchRequest">
+        <input type="submit" class="ml-4 bg-white btn btn-outline-primary" name="search_btn" value="検索" form="userSearchRequest">
       </div>
     </div>
     <form action="{{ route('user.show') }}" method="get" id="userSearchRequest"></form>

@@ -1,11 +1,11 @@
 @extends('layouts.sidebar')
 
 @section('content')
-<div class="board_area w-100 border m-auto d-flex">
+<div class="board_area w-100 m-auto d-flex">
   <div class="post_view w-75 mt-5">
     <p class="w-75 m-auto">投稿一覧</p>
     @foreach($posts as $post)
-    <div class="post_area border w-75 m-auto p-3">
+    <div class="post_area border w-75 mt-3 mr-auto ml-auto mb-3 p-3">
       <p><span>{{ $post->user->over_name }}</span><span class="ml-3">{{ $post->user->under_name }}</span>さん</p>
       <p><a href="{{ route('post.detail', ['id' => $post->id]) }}">{{ $post->post_title }}</a></p>
       <div class="post_bottom_area d-flex">
@@ -35,12 +35,12 @@
     </div>
     @endforeach
   </div>
-  <div class="other_area border w-25">
-    <div class="border m-4">
-      <div class=""><a href="{{ route('post.input') }}">投稿</a></div>
-      <div class="">
-        <input type="text" placeholder="キーワードを検索" name="keyword" form="postSearchRequest">
-        <input type="submit" value="検索" form="postSearchRequest">
+  <div class="other_area w-25">
+    <div class="m-4">
+      <div class="mb-3 btn btn-primary post-btn"><a href="{{ route('post.input') }}">新規投稿</a></div>
+      <div class="mb-1">
+        <input type="text" class="post-search" placeholder="キーワードで検索" name="keyword" form="postSearchRequest">
+        <input type="submit" class="btn btn-secondary" value="検索" form="postSearchRequest">
       </div>
       <input type="submit" name="like_posts" class="category_btn" value="いいねした投稿" form="postSearchRequest">
       <input type="submit" name="my_posts" class="category_btn" value="自分の投稿" form="postSearchRequest">
@@ -49,7 +49,7 @@
         <?php
           $sub_categories = \DB::table('sub_categories')->where('main_category_id',$category->id)->get();
         ?>
-        <li class="main_categories" category_id="{{ $category->id }}"><span>{{ $category->main_category }}<span></li>
+        <li class="main_categories mt-2" category_id="{{ $category->id }}"><span>{{ $category->main_category }}<span></li>
           <ul class="sub_categories">
           @foreach($sub_categories as $sub_category)
             <li class="ml-4">
